@@ -377,3 +377,17 @@ void OnDeinit(const int reason)
    Zmq_close(zmq_handle);
 }
 Hướng dẫn Chạy Hệ thốngCài đặt Môi trường Python:Cài đặt Python 3.9+.Chạy lệnh sau trong terminal: pip install pandas pandas-ta xgboost scikit-learn joblib pyzmqChuẩn bị Dữ liệu:Mở MT5, vào Tools -> History Center.Tìm cặp tiền của bạn (ví dụ: XAUUSD), chọn khung thời gian (ví dụ: H1).Export dữ liệu ra file .csv. Đổi tên file và đặt vào cùng thư mục với các file Python. Cập nhật tên file trong config.py.Huấn luyện AI:Mở terminal trong thư mục dự án.Chạy lệnh: python model_trainer.pyChờ quá trình hoàn tất. File xgb_trading_model.joblib sẽ được tạo ra.Thiết lập MetaTrader 5:Tải thư viện MQL-ZMQ từ GitHub. Giải nén và chép vào thư mục MQL5/Include của MT5.Mở MetaEditor, tạo một Expert Advisor mới, dán code từ file AI_Trader_EA.mq5 vào.Nhấn Compile. Nếu không có lỗi, bạn đã sẵn sàng.Kéo EA vừa tạo vào chart XAUUSD H1 trên MT5. Nhớ tick vào ô "Allow DLL imports".Bắt đầu Giao dịch:Chạy script Python chính: python live_trader.pyScript sẽ kết nối với EA trên MT5. Bạn sẽ thấy các log xuất hiện trên cả terminal của Python và tab "Experts" của MT5. Bot sẽ bắt đầu yêu cầu dữ liệu, phân tích và gửi tín hiệu giao dịch.QUAN TRỌNG: Hãy luôn chạy hệ thống này trên tài khoản Demo trong một thời gian dài để kiểm thử và đánh giá hiệu quả trước khi mạo hiểm bất kỳ khoản vốn nào.
+
+## XAU Guardian Bot (bot vàng ưu tiên bảo vệ vốn)
+
+File `xau_guardian_bot.py` là phiên bản bot live/dry-run cho MT5 được viết theo hướng **không gỡ lỗ, không martingale, không grid**. Bot chỉ mở tối đa một vị thế theo magic riêng, kiểm tra spread, dừng khi chạm giới hạn lỗ ngày và mặc định chỉ in tín hiệu ở chế độ `GUARDIAN_DRY_RUN = True`.
+
+Cách chạy thử an toàn:
+
+1. Huấn luyện model nếu muốn dùng thêm AI: `python model_trainer.py`.
+2. Mở MT5, đăng nhập tài khoản demo/cent và bật symbol vàng đúng với broker.
+3. Kiểm tra `GUARDIAN_SYMBOL` trong `config.py` vì mỗi broker có thể dùng tên khác nhau như `XAUUSD`, `XAUUSDc`, `GOLD`.
+4. Chạy dry-run: `python xau_guardian_bot.py`.
+5. Chỉ cân nhắc đổi `GUARDIAN_DRY_RUN = False` sau khi demo tối thiểu 4-8 tuần, drawdown chấp nhận được và đã hiểu rủi ro.
+
+Lưu ý: bot không đảm bảo lợi nhuận. Mục tiêu của bản này là giảm hành vi vào lệnh quá dày, nhồi lệnh và cố gỡ lỗ khi thị trường vàng biến động mạnh.
